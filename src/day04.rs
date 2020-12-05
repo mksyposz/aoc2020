@@ -1,7 +1,7 @@
 struct Passport {
-    byr: Option<String>,
-    iyr: Option<String>,
-    eyr: Option<String>,
+    byr: Option<i32>,
+    iyr: Option<i32>,
+    eyr: Option<i32>,
     hgt: Option<String>,
     hcl: Option<String>,
     ecl: Option<String>,
@@ -25,30 +25,14 @@ impl Passport {
             let key = &field[..3];
             let value = &field[4..];
             match key {
-                "byr" => {
-                    pass.byr = Some(value.to_string());
-                },
-                "iyr" => {
-                    pass.iyr = Some(value.to_string());
-                },
-                "eyr" => {
-                    pass.eyr = Some(value.to_string());
-                },
-                "hgt" => {
-                    pass.hgt = Some(value.to_string());
-                },
-                "hcl" => {
-                    pass.hcl = Some(value.to_string());
-                },
-                "ecl" => {
-                    pass.ecl = Some(value.to_string());
-                },
-                "pid" => {
-                    pass.pid = Some(value.to_string());
-                },
-                "cid" => {
-                    pass.cid = Some(value.to_string());
-                }
+                "byr" => pass.byr = value.parse::<i32>().ok(),
+                "iyr" => pass.iyr = value.parse::<i32>().ok(),
+                "eyr" => pass.eyr = value.parse::<i32>().ok(),
+                "hgt" => pass.hgt = Some(value.to_string()),
+                "hcl" => pass.hcl = Some(value.to_string()),
+                "ecl" => pass.ecl = Some(value.to_string()),
+                "pid" => pass.pid = Some(value.to_string()),
+                "cid" => pass.cid = Some(value.to_string()),
                 _ => {continue;}
             }
         }
@@ -56,104 +40,42 @@ impl Passport {
     }
 
     fn is_byr_valid(&self) -> bool {
-        let byr = self.byr.as_ref().unwrap();
-        let byr = byr.parse::<i32>().unwrap_or(-1);
-        if byr < 1920 || byr > 2002 {
-            return false;
-        }
-        return true;
+        let byr = self.byr.unwrap();
+        1920 <= byr && byr <= 2002
     }
 
     fn is_iyr_valid(&self) -> bool {
-        let iyr = self.iyr.as_ref().unwrap();
-        let iyr = iyr.parse::<i32>().unwrap_or(-1);
-        if iyr < 2010 || iyr > 2020 {
-            return false;
-        }
-        return true;
+        let iyr = self.iyr.unwrap();
+        2010 <= iyr && iyr <= 2020
     }
 
     fn is_eyr_valid(&self) -> bool {
-        let eyr = self.eyr.as_ref().unwrap();
-        let eyr = eyr.parse::<i32>().unwrap_or(-1);
-        if eyr < 2020 || eyr > 2030 {
-            return false;
-        }
-        return true;
+        let eyr = self.eyr.unwrap();
+        2020 <= eyr && eyr <= 2030
     }
 
     fn is_hgt_valid(&self) -> bool {
         let hgt = self.hgt.as_ref().unwrap();
-        let hgt: String = hgt.chars().rev().collect();
-        let measure_unit: String = hgt[..2].to_string().chars().rev().collect();
-        let measurment: String = hgt[2..].to_string().chars().rev().collect();
-        let measurment = measurment.parse::<i32>().unwrap_or(-1);
-        if measure_unit == "cm" && (measurment < 150 || measurment > 193) {
-            return false;
-        }
-        else if measure_unit == "in" && (measurment < 59 || measurment > 76) {
-            return false;
-        } else if measure_unit != "in" && measure_unit != "cm" {
-            return false;
-        }
-        return true;
+        let mut id = 0;
+        while hgt.chars().nth(id).unwrap_or(' ').is_digit(10) {id += 1}
+        let num = hgt[..id].parse::<i32>().unwrap_or(0);
+        (hgt.len() == 5 && hgt.contains("cm") && 150 <= num && num <= 193) ||
+        (hgt.len() == 4 && hgt.contains("in") && 59 <= num && num <= 76)
     }
 
     fn is_hcl_valid(&self) -> bool {
         let hcl = self.hcl.as_ref().unwrap();
-        if hcl.len() != 7 {
-            return false;
-        }
-        if &hcl[..1] != "#" {
-            return false;
-        }
-        for c in hcl[1..].chars() {
-            match c {
-                'a'..='f' => {
-                    continue;
-                },
-                '0'..='9' => {
-                    continue;
-                },
-                _ => {
-                    return false;
-                }
-            }
-        }
-        return true;
+        &hcl[..1] == "#" && hcl[1..].chars().all(|c| c.is_digit(16))
     }
 
     fn is_ecl_valid(&self) -> bool {
         let ecl = self.ecl.as_ref().unwrap();
-        match &ecl[..] {
-            "amb" | "blu" | "brn" | "gry" |
-            "grn" | "hzl" | "oth" => {
-                return true;
-            },
-            _ => {
-                return false;
-            }
-
-        }
+        ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"].contains(&ecl.as_str())
     }
 
     fn is_pid_valid(&self) -> bool {
         let pid = self.pid.as_ref().unwrap();
-        if pid.len() != 9 {
-            return false;
-        } else {
-            for p in pid.chars() {
-                match p {
-                    '0'..='9' => {
-                        continue;
-                    },
-                    _ => {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
+        pid.len() == 9 && pid.chars().all(|c| c.is_digit(10))
     }
 
     fn is_valid(&self) -> bool {
