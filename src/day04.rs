@@ -60,7 +60,7 @@ impl Passport {
         while hgt.chars().nth(id).unwrap_or(' ').is_digit(10) {id += 1}
         let num = hgt[..id].parse::<i32>().unwrap_or(0);
         (hgt.len() == 5 && hgt.contains("cm") && 150 <= num && num <= 193) ||
-        (hgt.len() == 4 && hgt.contains("in") && 59 <= num && num <= 76)
+            (hgt.len() == 4 && hgt.contains("in") && 59 <= num && num <= 76)
     }
 
     fn is_hcl_valid(&self) -> bool {
@@ -80,12 +80,12 @@ impl Passport {
 
     fn is_valid(&self) -> bool {
         (self.byr != None) &&
-        (self.iyr != None) &&
-        (self.eyr != None) &&
-        (self.hgt != None) &&
-        (self.hcl != None) &&
-        (self.ecl != None) &&
-        (self.pid != None)
+            (self.iyr != None) &&
+            (self.eyr != None) &&
+            (self.hgt != None) &&
+            (self.hcl != None) &&
+            (self.ecl != None) &&
+            (self.pid != None)
     }
 
     fn has_valid_fields(&self) -> bool {
