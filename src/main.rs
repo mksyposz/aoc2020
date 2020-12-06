@@ -15,6 +15,7 @@ mod day02;
 mod day03;
 mod day04;
 mod day05;
+mod day06;
 
 fn get_file_name(opt: &Opt) -> String {
     let day = opt.day;
@@ -40,6 +41,7 @@ fn main() {
         3 => day03::run(reader),
         4 => day04::run(reader),
         5 => day05::run(reader),
+        6 => day06::run(reader),
         _ => panic!("This day is yet to come."),
     };
     println!("Anwser for day {} part 1: {}", opt.day, part1);
