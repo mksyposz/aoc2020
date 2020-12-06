@@ -126,21 +126,9 @@ where
 }
 
 fn part_one(input: &Vec<Passport>) -> String {
-    let mut res = 0;
-    for p in input.iter() {
-        res += if p.is_valid() {
-            1
-        } else {0};
-    }
-    res.to_string()
+    input.iter().filter(|p| p.is_valid()).count().to_string()
 }
 
 fn part_two(input: &Vec<Passport>) -> String {
-    let mut res = 0;
-    for p in input.iter() {
-        res += if p.has_valid_fields() {
-            1
-        } else {0};
-    }
-    res.to_string()
+    input.iter().filter(|p| p.has_valid_fields()).count().to_string()
 }
