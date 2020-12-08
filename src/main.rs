@@ -20,21 +20,11 @@ mod day07;
 mod day08;
 mod tools;
 
-fn get_file_name(day: u32) -> String {
-    let pref = if day < 10 {
-        "0"
-    } else {
-        ""
-    };
-    let day = pref.to_owned() + &day.to_string();
-    return String::from("data/day") + &day + ".txt";
-}
-
 fn main() {
     let opt = Opt::from_args();
     let day = tools::get_data(opt.day);
 
-    let file_name = get_file_name(day);
+    let file_name = tools::get_day_relative_path(day);
     let file = File::open(file_name).unwrap();
     let reader = BufReader::new(file);
 

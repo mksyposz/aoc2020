@@ -5,7 +5,7 @@ fn get_dom() -> u32 {
     now.day()
 }
 
-fn get_day_relative_path(day: u32) -> String {
+pub fn get_day_relative_path(day: u32) -> String {
     String::from(if day < 10 {"data/day0"} else {"data/day"}) + &day.to_string()
         + ".txt"
 }
