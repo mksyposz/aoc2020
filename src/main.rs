@@ -17,6 +17,7 @@ mod day04;
 mod day05;
 mod day06;
 mod day07;
+mod day08;
 mod tools;
 
 fn get_file_name(day: u32) -> String {
@@ -45,6 +46,7 @@ fn main() {
         5 => day05::run(reader),
         6 => day06::run(reader),
         7 => day07::run(reader),
+        8 => day08::run(reader),
         _ => panic!("This day is yet to come."),
     };
     println!("Anwser for day {} part 1: {}", day, part1);
