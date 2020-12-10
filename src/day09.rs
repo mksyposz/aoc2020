@@ -11,7 +11,7 @@ where
     (ans1, ans2)
 }
 
-fn check(set: &mut HashMap<i64, u32>, target: i64) -> bool {
+fn check(set: &HashMap<i64, u32>, target: i64) -> bool {
     for (key, val) in set.iter() {
         if val > &0 {
             let k = set.get(&(target-key)).unwrap_or(&0);
@@ -36,7 +36,7 @@ fn part_one(input: &Vec<i64>) -> String {
         if end >= input.len() {
             break;
         }
-        if !check(&mut set, input[end]) {
+        if !check(&set, input[end]) {
             res = input[end];
             break;
         }
