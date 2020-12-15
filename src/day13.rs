@@ -59,9 +59,8 @@ fn mod_inv(x: i64, n: i64) -> i64 {
 fn part_two(times: &Vec<(i64, i64)>) -> String {
     let mut prod: i64 = 1;
     times.iter().for_each(|(_, t)| prod *= t);
-    let result = times.iter().map(|(a, t)| {
-        (prod/t) * mod_inv(prod/t, *t) * (t - (a % t))
-    })
-    .fold(0, |sum, val| (sum+val) % prod );
+    let result = times.iter()
+                      .map(|(a, t)| (prod/t) * mod_inv(prod/t, *t) * (t - (a % t)))
+                      .fold(0, |acc, val| (acc+val) % prod );
     result.to_string()
 }
