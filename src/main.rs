@@ -25,6 +25,7 @@ mod day12;
 mod day13;
 mod day14;
 mod day15;
+mod day16;
 mod tools;
 
 fn main() {
@@ -51,6 +52,7 @@ fn main() {
         13 => day13::run(reader),
         14 => day14::run(reader),
         15 => day15::run(reader),
+        16 => day16::run(reader),
         _ => panic!("This day is yet to come."),
     };
     println!("Anwser for day {} part 1: {}", day, part1);
