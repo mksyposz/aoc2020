@@ -29,7 +29,7 @@ where
                 if line.is_empty() {
                     input_part = NEARBYTICKETS_NAME;
                 } else {
-                    my_ticket = line.split(",").map(|x| x.parse::<i64>().unwrap()).collect::<Vec<i64>>();
+                    my_ticket = line_values(&line);
                 }
             },
 
@@ -38,8 +38,7 @@ where
             },
 
             NEARBYTICKETS_VALUES => {
-                let values = line.split(",").map(|x| x.parse::<i64>().unwrap()).collect::<Vec<i64>>();
-                nearby_tickets.push(values);
+                nearby_tickets.push(line_values(&line));
             },
             _ => {},
         }
@@ -50,6 +49,12 @@ where
                                        .collect::<Vec<Vec<i64>>>();
     let ans2 = part_two(&tf, &my_ticket, &nearby_tickets);
     (ans1, ans2)
+}
+
+fn line_values(s: &String) -> Vec<i64> {
+    s.split(",")
+     .map(|x| x.parse::<i64>().unwrap())
+     .collect()
 }
 
 fn part_one(tf: &TicketFields, nts: &mut Vec<Vec<i64>>) -> String {
