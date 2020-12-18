@@ -32,15 +32,13 @@ where
                     my_ticket = line_values(&line);
                 }
             },
-
             NEARBYTICKETS_NAME => {
                 input_part = NEARBYTICKETS_VALUES;
             },
-
             NEARBYTICKETS_VALUES => {
                 nearby_tickets.push(line_values(&line));
             },
-            _ => {},
+            _ => unreachable!(),
         }
     }
     let ans1 = part_one(&tf, &mut nearby_tickets);
@@ -89,7 +87,7 @@ fn part_two(tf: &TicketFields, mt: &Vec<i64>, nts: &Vec<Vec<i64>>) -> String {
          });
     }
     g.iter()
-     .filter(|&(k, _)| k.contains("departure"))
+     .filter(|&(k, _)| k.starts_with("departure"))
      .map(|(_, v)| mt[v[0]])
      .product::<i64>()
         .to_string()
