@@ -27,10 +27,8 @@ where
             _ => unreachable!(),
         }
     }
-    let now = std::time::Instant::now();
     let ans1 = part_one(d1.clone(), d2.clone());
     let ans2 = part_two(d1.clone(), d2.clone());
-    println!("{}", now.elapsed().as_millis());
     (ans1, ans2)
 }
 
@@ -69,31 +67,24 @@ fn hash_cards(d1: &Deck, d2: &Deck) -> u64 {
     hasher.finish()
 }
 
-use std::collections::HashSet;
 fn play_recursive_combat(mut d1: Deck, mut d2: Deck) -> (u32, Deck) {
+    use std::collections::HashSet;
     let mut history = HashSet::new();
     while !d1.is_empty() && !d2.is_empty() {
-
         let state = hash_cards(&d1, &d2);
         if !history.insert(state) {
             return (1, d1);
         }
         let c1 = d1.top_card();
         let c2 = d2.top_card();
-        let winner;
-        if c1 <= (d1.len() as u64) && c2 <= (d2.len() as u64) {
-            let (p,_) =  play_recursive_combat(d1.make_copy(c1),
-                                               d2.make_copy(c2));
-            winner = p;
-        } else {
-            if c1 > c2 {winner = 1}
-            else if c2 > c1 {winner = 2}
-            else {unreachable!()}
-        }
-        if  winner == 1 {
+        let winner =
+            if c1 <= (d1.len() as u64) && c2 <= (d2.len() as u64) {
+                play_recursive_combat(d1.make_copy(c1),d2.make_copy(c2)).0
+            } else {0};
+        if  (winner == 0 && c1 > c2) || winner == 1 {
             d1.deck.push(c1);
             d1.deck.push(c2);
-        } else if winner == 2 {
+        } else if (winner == 0 && c2 > c1 ) || winner == 2 {
             d2.deck.push(c2);
             d2.deck.push(c1);
         } else {
@@ -135,23 +126,25 @@ impl Deck {
         Self {
             deck: self.deck.iter()
                            .take(len as usize)
-                .map(|x| *x)
-                           .collect::<collections::Queue<u64>>()
+                           .map(|x| *x)
+                           .collect::<collections::Queue<u64>>(),
         }
     }
 }
 
 mod collections {
-    use std::collections::LinkedList;
+    //vecdeque is faster than linkedlist 317ms vs 476ms
+    use std::collections::VecDeque;
+    use std::collections::vec_deque::Iter;
     #[derive(Clone, Hash)]
     pub struct Queue<T> {
-        queue: LinkedList<T>,
+        queue: VecDeque<T>,
     }
 
     impl<T> Queue<T> {
         pub fn new() -> Self {
             Self {
-                queue: LinkedList::<T>::new()
+                queue: VecDeque::<T>::new()
             }
         }
 
@@ -167,7 +160,7 @@ mod collections {
             self.queue.len()
         }
 
-        pub fn iter(&self) -> std::collections::linked_list::Iter<'_,T> {
+        pub fn iter(&self) -> Iter<'_,T> {
             self.queue.iter()
         }
     }
