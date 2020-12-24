@@ -47,14 +47,13 @@ fn part_one(black_tiles: &HashSet<Tile>) -> String {
 }
 
 use std::collections::HashMap;
-const NEIGHBOURS: [(i32,i32); 6] = [(1,0), (-1,0), (0, 1), (-1, 1), (1, -1), (0, -1)];
+const NEIGHBOURS: &[Tile] = &[(1,0), (-1,0), (0, 1), (-1, 1), (1, -1), (0, -1)];
 fn part_two(black_tiles: HashSet<Tile>, days: u32) -> String {
     let all_tiles = |blacks: &HashSet<Tile>| {
-        blacks.iter().fold(HashMap::new(), |mut acc, tile| {
-            NEIGHBOURS.iter().for_each(|(dx, dy)| {
-                let c = acc.entry((tile.0 + dx, tile.1+dy)).or_insert(0);
-                *c += 1;
-            });
+        blacks.iter().fold(HashMap::new(), |mut acc, (x,y)| {
+            NEIGHBOURS.iter().for_each(|(dx, dy)|
+                *acc.entry((x + dx, y + dy)).or_insert(0) += 1
+            );
             acc
         })
     };
